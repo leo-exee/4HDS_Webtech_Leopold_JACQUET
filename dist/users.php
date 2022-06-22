@@ -6,11 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Sidenav Light - SB Admin</title>
+        <title>Static Navigation - SB Admin</title>
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
     </head>
-    <body class="sb-nav-fixed">
+    <body>
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="index.html">Start Bootstrap</a>
@@ -38,7 +38,7 @@
         </nav>
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Core</div>
@@ -71,8 +71,9 @@
                                     </a>
                                     <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="create_user.html">Add user</a>
-                                            <a class="nav-link" href="create_product.html">Add product</a>
+                                            <a class="nav-link" href="login.html">Login</a>
+                                            <a class="nav-link" href="register.html">Register</a>
+                                            <a class="nav-link" href="password.html">Forgot Password</a>
                                         </nav>
                                     </div>
                                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
@@ -108,22 +109,43 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Sidenav Light</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Sidenav Light</li>
-                        </ol>
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                This page is an example of using the light side navigation option. By appending the
-                                <code>.sb-sidenav-light</code>
-                                class to the
-                                <code>.sb-sidenav</code>
-                                class, the side navigation will take on a light color scheme. The
-                                <code>.sb-sidenav-dark</code>
-                                is also available for a darker option.
-                            </div>
-                        </div>
+                        <h1 class="mt-4">Users List</h1>
+                        
+                        <?php 
+
+                        function pdo() {
+                            $servername = "localhost";
+                            $username = "root";
+                            $password = "lego2002";
+                            $dbname = "gestion_stock";
+                            $dbh = new mysqli($servername, $username, $password, $dbname);
+                            if ($dbh->connect_error) {
+                                die("Connection failed: " . $dbh->connect_error);
+                            }
+                            return $dbh;
+                        }
+
+                        $dbh = pdo();
+                        $sql = "SELECT * FROM users";
+                        $result = $dbh->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            // output data of each row
+                            while($row = $result->fetch_assoc()) {
+                            echo $row['nom'].' '.$row['prenom'].'<br>
+                            <form action="./back/users/user_delete.php" method="post">
+                                <input type="hidden" name="id" value="'.$row['id'].'">
+                                <input type="submit" value="remove">    
+                            </form>
+                            <form action="update_user.php" method="post">
+                                <input type="hidden" name="id" value="'.$row['id'].'">
+                                <input type="submit" value="edit">    
+                            </form><br>';
+                            }
+                        }
+                        
+                        ?>
+                    
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
